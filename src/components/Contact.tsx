@@ -1,7 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import { useInView } from 'framer-motion';
+import { useState } from 'react';
 import { MapPin, Phone, Clock, Send } from 'lucide-react';
 
 const info = [
@@ -11,8 +10,6 @@ const info = [
 ];
 
 export default function Contact() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-60px' });
   const [sent, setSent] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
 
@@ -23,12 +20,11 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" ref={ref} className="relative py-32 bg-[#060e1c]/50 overflow-hidden">
+    <section id="contact" className="relative py-32 bg-[#060e1c]/50 overflow-hidden">
       <div className="absolute left-0 bottom-0 w-[500px] h-[500px] rounded-full bg-[#E8192C]/5 blur-[120px] pointer-events-none" />
-
       <div className="max-w-7xl mx-auto px-6">
-        {/* Header */}
-        <div className={`mb-16 transition-all duration-700 ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+
+        <div className="mb-16 anim-up">
           <div className="inline-flex items-center gap-2 border border-[#E8192C]/40 px-4 py-1.5 mb-6">
             <span className="font-['DM_Sans'] text-xs font-medium uppercase tracking-[0.2em] text-[#E8192C]">Liên Hệ</span>
           </div>
@@ -38,13 +34,10 @@ export default function Contact() {
         </div>
 
         <div className="grid lg:grid-cols-5 gap-12">
-          {/* Info */}
-          <div className={`lg:col-span-2 space-y-8 transition-all duration-700 delay-100 ${inView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
-            <p className="font-['DM_Sans'] text-white/60 leading-relaxed">
-              Đặt lịch tập thử miễn phí hoặc tư vấn trực tiếp với đội ngũ của chúng tôi.
-            </p>
-            {info.map((item, i) => (
-              <div key={item.title} className={`flex gap-4 transition-all duration-500 ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ transitionDelay: `${200 + i * 80}ms` }}>
+          <div className="lg:col-span-2 space-y-8 anim-left">
+            <p className="font-['DM_Sans'] text-white/60 leading-relaxed">Đặt lịch tập thử miễn phí hoặc tư vấn trực tiếp với đội ngũ của chúng tôi.</p>
+            {info.map(item => (
+              <div key={item.title} className="flex gap-4">
                 <div className="w-12 h-12 bg-[#E8192C]/10 border border-[#E8192C]/20 flex items-center justify-center shrink-0">
                   <item.icon size={18} className="text-[#E8192C]" />
                 </div>
@@ -60,14 +53,9 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit}
-            className={`lg:col-span-3 space-y-5 transition-all duration-700 delay-200 ${inView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
+          <form onSubmit={handleSubmit} className="lg:col-span-3 space-y-5 anim-right">
             <div className="grid sm:grid-cols-2 gap-5">
-              {[
-                { key: 'name', label: 'Họ & Tên', placeholder: 'Nguyễn Văn A', type: 'text' },
-                { key: 'email', label: 'Email', placeholder: 'email@example.com', type: 'email' },
-              ].map(field => (
+              {[{ key: 'name', label: 'Họ & Tên', placeholder: 'Nguyễn Văn A', type: 'text' }, { key: 'email', label: 'Email', placeholder: 'email@example.com', type: 'email' }].map(field => (
                 <div key={field.key}>
                   <label className="block font-['DM_Sans'] text-xs text-white/50 uppercase tracking-wider mb-2">{field.label}</label>
                   <input type={field.type} placeholder={field.placeholder} required
@@ -79,8 +67,8 @@ export default function Contact() {
             </div>
             <div>
               <label className="block font-['DM_Sans'] text-xs text-white/50 uppercase tracking-wider mb-2">Số Điện Thoại</label>
-              <input type="tel" placeholder="0901 234 567"
-                value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
+              <input type="tel" placeholder="0901 234 567" value={form.phone}
+                onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
                 className="w-full bg-[#0f1e35] border border-white/10 focus:border-[#E8192C] text-white placeholder-white/20 font-['DM_Sans'] text-sm px-5 py-3.5 outline-none transition-colors duration-200" />
             </div>
             <div>

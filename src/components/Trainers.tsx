@@ -1,7 +1,5 @@
 'use client';
 
-import { useRef } from 'react';
-import { useInView } from 'framer-motion';
 import { Share2, Globe, Tv } from 'lucide-react';
 import Image from 'next/image';
 
@@ -13,16 +11,12 @@ const trainers = [
 ];
 
 export default function Trainers() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-60px' });
-
   return (
-    <section id="trainers" ref={ref} className="relative py-32 overflow-hidden">
+    <section id="trainers" className="relative py-32 overflow-hidden">
       <div className="absolute left-1/4 bottom-0 w-[600px] h-[600px] rounded-full bg-[#E8192C]/5 blur-[150px] pointer-events-none" />
-
       <div className="max-w-7xl mx-auto px-6">
-        {/* Header */}
-        <div className={`text-center mb-16 transition-all duration-700 ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+
+        <div className="text-center mb-16 anim-up">
           <div className="inline-flex items-center gap-2 border border-[#E8192C]/40 px-4 py-1.5 mb-6">
             <span className="font-['DM_Sans'] text-xs font-medium uppercase tracking-[0.2em] text-[#E8192C]">Đội Ngũ</span>
           </div>
@@ -34,18 +28,13 @@ export default function Trainers() {
           </p>
         </div>
 
-        {/* Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {trainers.map((trainer, i) => (
-            <div
-              key={trainer.name}
-              className={`card-hover group relative bg-[#060e1c] border border-white/8 overflow-hidden transition-all duration-700 ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
-              style={{ transitionDelay: `${i * 100}ms` }}
-            >
-              {/* Photo */}
+            <div key={trainer.name}
+              className="card-hover group relative bg-[#060e1c] border border-white/8 overflow-hidden anim-up"
+              style={{ animationDelay: `${i * 100}ms` }}>
               <div className="relative h-72 overflow-hidden">
-                <Image src={trainer.img} alt={trainer.name} fill
-                  className="object-cover object-top group-hover:scale-105 transition-transform duration-700" unoptimized />
+                <Image src={trainer.img} alt={trainer.name} fill className="object-cover object-top group-hover:scale-105 transition-transform duration-700" unoptimized />
                 <div className="absolute inset-0 opacity-20 mix-blend-color" style={{ backgroundColor: trainer.color }} />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#060e1c] via-transparent to-transparent" />
                 <div className="absolute top-4 right-4 bg-[#04080f]/80 border border-white/10 px-3 py-1">
@@ -59,8 +48,6 @@ export default function Trainers() {
                   ))}
                 </div>
               </div>
-
-              {/* Info */}
               <div className="p-6">
                 <h3 className="font-['Barlow_Condensed'] font-bold text-2xl uppercase text-white mb-1">{trainer.name}</h3>
                 <p className="font-['DM_Sans'] text-xs uppercase tracking-widest mb-3" style={{ color: trainer.color }}>{trainer.title}</p>

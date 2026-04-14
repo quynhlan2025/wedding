@@ -1,65 +1,32 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import { useInView } from 'framer-motion';
+import { useState } from 'react';
 import { Clock, Users, Flame, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 
 const categories = ['Tất Cả', 'Gym', 'Yoga', 'Cardio', 'Đặc Biệt'];
 
 const classes = [
-  {
-    category: 'Gym', name: 'Power Lifting',
-    desc: 'Tăng cơ bắp và sức mạnh tổng thể với phương pháp tập luyện chuyên nghiệp.',
-    duration: '60 phút', level: 'Nâng cao', calories: '400-600',
-    icon: '🏋️', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=70&auto=format&fit=crop',
-  },
-  {
-    category: 'Yoga', name: 'Hatha Yoga',
-    desc: 'Cân bằng cơ thể và tâm trí qua các tư thế yoga cổ điển và hơi thở sâu.',
-    duration: '75 phút', level: 'Cơ bản', calories: '150-250',
-    icon: '🧘', img: 'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=70&auto=format&fit=crop',
-  },
-  {
-    category: 'Cardio', name: 'HIIT Cardio',
-    desc: 'Đốt cháy mỡ thừa cực hiệu quả với bài tập cường độ cao xen kẽ nghỉ ngắn.',
-    duration: '45 phút', level: 'Trung bình', calories: '500-700',
-    icon: '🔥', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=70&auto=format&fit=crop',
-  },
-  {
-    category: 'Yoga', name: 'Vinyasa Flow',
-    desc: 'Kết hợp động tác linh hoạt và hơi thở tạo nên dòng chảy thiền định.',
-    duration: '60 phút', level: 'Trung bình', calories: '200-350',
-    icon: '🌊', img: 'https://images.unsplash.com/photo-1588286840104-8957b019727f?w=600&q=70&auto=format&fit=crop',
-  },
-  {
-    category: 'Đặc Biệt', name: 'Boxing Fitness',
-    desc: 'Phối hợp kỹ năng boxing với cardio để tăng sức mạnh và phản xạ.',
-    duration: '60 phút', level: 'Trung bình', calories: '600-800',
-    icon: '🥊', img: 'https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=600&q=70&auto=format&fit=crop',
-  },
-  {
-    category: 'Gym', name: 'Body Sculpt',
-    desc: 'Tạo hình vóc dáng lý tưởng với bài tập kết hợp tạ và tự trọng lượng.',
-    duration: '50 phút', level: 'Cơ bản', calories: '300-450',
-    icon: '💪', img: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600&q=70&auto=format&fit=crop',
-  },
+  { category: 'Gym', name: 'Power Lifting', desc: 'Tăng cơ bắp và sức mạnh tổng thể với phương pháp tập luyện chuyên nghiệp.', duration: '60 phút', level: 'Nâng cao', calories: '400-600', icon: '🏋️', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=70&auto=format&fit=crop' },
+  { category: 'Yoga', name: 'Hatha Yoga', desc: 'Cân bằng cơ thể và tâm trí qua các tư thế yoga cổ điển và hơi thở sâu.', duration: '75 phút', level: 'Cơ bản', calories: '150-250', icon: '🧘', img: 'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=70&auto=format&fit=crop' },
+  { category: 'Cardio', name: 'HIIT Cardio', desc: 'Đốt cháy mỡ thừa cực hiệu quả với bài tập cường độ cao xen kẽ nghỉ ngắn.', duration: '45 phút', level: 'Trung bình', calories: '500-700', icon: '🔥', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=70&auto=format&fit=crop' },
+  { category: 'Yoga', name: 'Vinyasa Flow', desc: 'Kết hợp động tác linh hoạt và hơi thở tạo nên dòng chảy thiền định.', duration: '60 phút', level: 'Trung bình', calories: '200-350', icon: '🌊', img: 'https://images.unsplash.com/photo-1588286840104-8957b019727f?w=600&q=70&auto=format&fit=crop' },
+  { category: 'Đặc Biệt', name: 'Boxing Fitness', desc: 'Phối hợp kỹ năng boxing với cardio để tăng sức mạnh và phản xạ.', duration: '60 phút', level: 'Trung bình', calories: '600-800', icon: '🥊', img: 'https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=600&q=70&auto=format&fit=crop' },
+  { category: 'Gym', name: 'Body Sculpt', desc: 'Tạo hình vóc dáng lý tưởng với bài tập kết hợp tạ và tự trọng lượng.', duration: '50 phút', level: 'Cơ bản', calories: '300-450', icon: '💪', img: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600&q=70&auto=format&fit=crop' },
 ];
 
 export default function Classes() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-60px' });
   const [active, setActive] = useState('Tất Cả');
   const filtered = active === 'Tất Cả' ? classes : classes.filter(c => c.category === active);
 
   return (
-    <section id="classes" ref={ref} className="relative py-32 bg-[#060e1c]/50 overflow-hidden">
+    <section id="classes" className="relative py-32 bg-[#060e1c]/50 overflow-hidden">
       <div className="absolute right-0 top-0 w-[500px] h-[500px] rounded-full bg-[#E8192C]/5 blur-[150px] pointer-events-none" />
-
       <div className="max-w-7xl mx-auto px-6">
+
         {/* Header */}
-        <div className={`flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8 transition-all duration-700 ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <div>
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
+          <div className="anim-up">
             <div className="inline-flex items-center gap-2 border border-[#E8192C]/40 px-4 py-1.5 mb-6">
               <span className="font-['DM_Sans'] text-xs font-medium uppercase tracking-[0.2em] text-[#E8192C]">Chương Trình</span>
             </div>
@@ -80,19 +47,14 @@ export default function Classes() {
         {/* Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((cls, i) => (
-            <div
-              key={cls.name}
-              className={`card-hover group relative bg-[#0f1e35] border border-white/8 overflow-hidden transition-all duration-700 ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-              style={{ transitionDelay: `${100 + i * 80}ms` }}
-            >
-              {/* Image */}
+            <div key={cls.name}
+              className="card-hover group relative bg-[#0f1e35] border border-white/8 overflow-hidden anim-up"
+              style={{ animationDelay: `${i * 80}ms` }}>
               <div className="relative h-44 overflow-hidden">
-                <Image src={cls.img} alt={cls.name} fill
-                  className="object-cover object-center group-hover:scale-110 transition-transform duration-700" unoptimized />
+                <Image src={cls.img} alt={cls.name} fill className="object-cover object-center group-hover:scale-110 transition-transform duration-700" unoptimized />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0f1e35] via-[#0f1e35]/40 to-transparent" />
                 <span className="absolute bottom-4 left-4 text-3xl">{cls.icon}</span>
               </div>
-
               <div className="relative p-8">
                 <div className="flex items-center justify-between mb-6">
                   <span className="font-['DM_Sans'] text-xs text-[#E8192C] uppercase tracking-widest border border-[#E8192C]/30 px-3 py-1">{cls.category}</span>
@@ -101,9 +63,9 @@ export default function Classes() {
                 <p className="font-['DM_Sans'] text-sm text-white/50 leading-relaxed mb-6">{cls.desc}</p>
                 <div className="w-12 h-px bg-[#E8192C] mb-6 group-hover:w-full transition-all duration-500" />
                 <div className="flex items-center gap-4 text-white/40 text-xs font-['DM_Sans']">
-                  <span className="flex items-center gap-1.5"><Clock size={12} />{cls.duration}</span>
-                  <span className="flex items-center gap-1.5"><Users size={12} />{cls.level}</span>
-                  <span className="flex items-center gap-1.5"><Flame size={12} />{cls.calories} kcal</span>
+                  <span className="flex items-center gap-1.5"><Clock size={12}/>{cls.duration}</span>
+                  <span className="flex items-center gap-1.5"><Users size={12}/>{cls.level}</span>
+                  <span className="flex items-center gap-1.5"><Flame size={12}/>{cls.calories} kcal</span>
                 </div>
                 <div className="absolute bottom-6 right-6 w-10 h-10 bg-[#E8192C] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <ArrowRight size={16} className="text-white" />
@@ -113,8 +75,7 @@ export default function Classes() {
           ))}
         </div>
 
-        {/* CTA */}
-        <div className={`text-center mt-12 transition-all duration-700 delay-500 ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <div className="text-center mt-12">
           <p className="font-['DM_Sans'] text-white/40 mb-4">Còn nhiều lớp học khác đang chờ bạn</p>
           <button onClick={() => document.querySelector('#pricing')?.scrollIntoView({ behavior: 'smooth' })}
             className="font-['Barlow_Condensed'] font-bold text-lg uppercase tracking-widest text-[#E8192C] border border-[#E8192C]/40 px-10 py-3 hover:bg-[#E8192C] hover:text-white transition-all duration-300">

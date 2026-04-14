@@ -1,44 +1,20 @@
 'use client';
 
-import { useRef } from 'react';
-import { useInView } from 'framer-motion';
 import { Check, Zap } from 'lucide-react';
 
 const plans = [
-  {
-    name: 'Cơ Bản', price: '599', period: '/tháng',
-    desc: 'Hoàn hảo cho người mới bắt đầu',
-    features: ['Truy cập khu gym chính', '2 lớp nhóm / tuần', 'Tủ đồ cá nhân', 'Hỗ trợ dinh dưỡng cơ bản', 'Ứng dụng theo dõi tiến độ'],
-    notIncluded: ['PT 1-1', 'Yoga studio cao cấp', 'Spa & phục hồi'],
-    popular: false, color: '#ffffff',
-  },
-  {
-    name: 'Chuyên Nghiệp', price: '999', period: '/tháng',
-    desc: 'Phổ biến nhất – trải nghiệm đầy đủ',
-    features: ['Toàn bộ khu gym & yoga', 'Lớp nhóm không giới hạn', '4 buổi PT 1-1 / tháng', 'Tư vấn dinh dưỡng chuyên sâu', 'Ứng dụng & kế hoạch cá nhân hóa', 'Spa & phòng phục hồi'],
-    notIncluded: ['Huấn luyện VIP riêng'],
-    popular: true, color: '#E8192C',
-  },
-  {
-    name: 'Elite VIP', price: '1,999', period: '/tháng',
-    desc: 'Dành cho những ai muốn tốt nhất',
-    features: ['Tất cả quyền lợi Pro', 'PT 1-1 không giới hạn', 'Chương trình hoàn toàn cá nhân', 'Dinh dưỡng & phục hồi VIP', 'Phòng tập riêng tư', 'Ưu tiên đặt lịch 24/7', 'Hỗ trợ concierge cá nhân'],
-    notIncluded: [],
-    popular: false, color: '#f59e0b',
-  },
+  { name: 'Cơ Bản', price: '599', period: '/tháng', desc: 'Hoàn hảo cho người mới bắt đầu', features: ['Truy cập khu gym chính', '2 lớp nhóm / tuần', 'Tủ đồ cá nhân', 'Hỗ trợ dinh dưỡng cơ bản', 'Ứng dụng theo dõi tiến độ'], notIncluded: ['PT 1-1', 'Yoga studio cao cấp', 'Spa & phục hồi'], popular: false, color: '#ffffff' },
+  { name: 'Chuyên Nghiệp', price: '999', period: '/tháng', desc: 'Phổ biến nhất – trải nghiệm đầy đủ', features: ['Toàn bộ khu gym & yoga', 'Lớp nhóm không giới hạn', '4 buổi PT 1-1 / tháng', 'Tư vấn dinh dưỡng chuyên sâu', 'Ứng dụng & kế hoạch cá nhân hóa', 'Spa & phòng phục hồi'], notIncluded: ['Huấn luyện VIP riêng'], popular: true, color: '#E8192C' },
+  { name: 'Elite VIP', price: '1,999', period: '/tháng', desc: 'Dành cho những ai muốn tốt nhất', features: ['Tất cả quyền lợi Pro', 'PT 1-1 không giới hạn', 'Chương trình hoàn toàn cá nhân', 'Dinh dưỡng & phục hồi VIP', 'Phòng tập riêng tư', 'Ưu tiên đặt lịch 24/7', 'Hỗ trợ concierge cá nhân'], notIncluded: [], popular: false, color: '#f59e0b' },
 ];
 
 export default function Pricing() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-60px' });
-
   return (
-    <section id="pricing" ref={ref} className="relative py-32 bg-[#060e1c]/40 overflow-hidden">
+    <section id="pricing" className="relative py-32 bg-[#060e1c]/40 overflow-hidden">
       <div className="absolute left-1/2 -translate-x-1/2 top-0 w-[800px] h-[400px] rounded-full bg-[#E8192C]/5 blur-[150px] pointer-events-none" />
-
       <div className="max-w-7xl mx-auto px-6">
-        {/* Header */}
-        <div className={`text-center mb-16 transition-all duration-700 ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+
+        <div className="text-center mb-16 anim-up">
           <div className="inline-flex items-center gap-2 border border-[#E8192C]/40 px-4 py-1.5 mb-6">
             <span className="font-['DM_Sans'] text-xs font-medium uppercase tracking-[0.2em] text-[#E8192C]">Gói Hội Viên</span>
           </div>
@@ -50,16 +26,11 @@ export default function Pricing() {
           </p>
         </div>
 
-        {/* Plans */}
         <div className="grid lg:grid-cols-3 gap-6 items-stretch">
           {plans.map((plan, i) => (
-            <div
-              key={plan.name}
-              className={`relative flex flex-col bg-[#0f1e35] border overflow-hidden transition-all duration-700 ${
-                plan.popular ? 'border-[#E8192C] shadow-[0_0_60px_rgba(232,25,44,0.2)] lg:scale-105' : 'border-white/8 hover:border-white/20'
-              } ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
-              style={{ transitionDelay: `${i * 150}ms` }}
-            >
+            <div key={plan.name}
+              className={`relative flex flex-col bg-[#0f1e35] border overflow-hidden anim-up ${plan.popular ? 'border-[#E8192C] shadow-[0_0_60px_rgba(232,25,44,0.2)] lg:scale-105' : 'border-white/8'}`}
+              style={{ animationDelay: `${i * 150}ms` }}>
               {plan.popular && (
                 <div className="bg-[#E8192C] py-2 text-center">
                   <span className="font-['Barlow_Condensed'] font-bold text-sm uppercase tracking-widest text-white flex items-center justify-center gap-2">
@@ -67,7 +38,6 @@ export default function Pricing() {
                   </span>
                 </div>
               )}
-
               <div className="p-8 flex flex-col flex-1">
                 <div className="mb-8">
                   <h3 className="font-['Barlow_Condensed'] font-bold text-2xl uppercase text-white/60 mb-2">{plan.name}</h3>
@@ -78,9 +48,7 @@ export default function Pricing() {
                   </div>
                   <p className="font-['DM_Sans'] text-xs text-white/40">{plan.desc}</p>
                 </div>
-
                 <div className="h-px mb-8" style={{ background: `linear-gradient(90deg, ${plan.popular ? '#E8192C' : 'rgba(255,255,255,0.1)'}, transparent)` }} />
-
                 <div className="flex-1 space-y-4 mb-8">
                   {plan.features.map(f => (
                     <div key={f} className="flex items-start gap-3">
@@ -95,22 +63,14 @@ export default function Pricing() {
                     </div>
                   ))}
                 </div>
-
-                <button
-                  className={`w-full font-['Barlow_Condensed'] font-bold text-xl uppercase tracking-widest py-4 transition-all duration-300 active:scale-95 ${
-                    plan.popular ? 'bg-[#E8192C] text-white hover:bg-[#c4152a]' : 'border border-white/20 text-white hover:border-[#E8192C] hover:text-[#E8192C]'
-                  }`}
-                >
+                <button className={`w-full font-['Barlow_Condensed'] font-bold text-xl uppercase tracking-widest py-4 transition-all duration-300 active:scale-95 ${plan.popular ? 'bg-[#E8192C] text-white hover:bg-[#c4152a]' : 'border border-white/20 text-white hover:border-[#E8192C] hover:text-[#E8192C]'}`}>
                   Chọn Gói Này
                 </button>
               </div>
             </div>
           ))}
         </div>
-
-        <p className={`text-center font-['DM_Sans'] text-xs text-white/30 mt-8 transition-all duration-700 delay-500 ${inView ? 'opacity-100' : 'opacity-0'}`}>
-          Giá đã bao gồm VAT. Dùng thử miễn phí 7 ngày cho tất cả gói.
-        </p>
+        <p className="text-center font-['DM_Sans'] text-xs text-white/30 mt-8">Giá đã bao gồm VAT. Dùng thử miễn phí 7 ngày cho tất cả gói.</p>
       </div>
     </section>
   );
