@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { useInView } from 'framer-motion';
 import { CheckCircle } from 'lucide-react';
 import Image from 'next/image';
 
@@ -16,7 +16,7 @@ const features = [
 
 export default function About() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-100px' });
+  const inView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
     <section id="about" ref={ref} className="relative py-32 overflow-hidden">
@@ -25,64 +25,36 @@ export default function About() {
 
       <div className="relative max-w-7xl mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
+
           {/* Left – Image */}
-          <motion.div
-            initial={{ opacity: 0, x: -60 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8 }}
-            className="relative"
-          >
-            {/* Main image */}
+          <div className={`relative transition-all duration-700 ${inView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
             <div className="relative aspect-[4/5] overflow-hidden border border-white/8">
               <Image
                 src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=900&q=80&auto=format&fit=crop"
-                alt="Gym interior"
-                fill
-                className="object-cover object-center"
-                unoptimized
+                alt="Gym interior" fill className="object-cover object-center" unoptimized
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#04080f]/60 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#E8192C]" />
             </div>
 
-            {/* Small inset image */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="absolute -bottom-8 right-0 w-2/5 aspect-square border-4 border-[#04080f] overflow-hidden shadow-2xl"
-            >
+            <div className={`absolute -bottom-8 right-0 w-2/5 aspect-square border-4 border-[#04080f] overflow-hidden shadow-2xl transition-all duration-700 delay-300 ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <Image
                 src="https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=400&q=80&auto=format&fit=crop"
-                alt="Yoga session"
-                fill
-                className="object-cover object-center"
-                unoptimized
+                alt="Yoga session" fill className="object-cover object-center" unoptimized
               />
               <div className="absolute inset-0 bg-[#E8192C]/10" />
-            </motion.div>
+            </div>
 
-            {/* Floating badge */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={inView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="absolute top-8 -right-6 bg-[#E8192C] p-6 shadow-2xl"
-            >
+            <div className={`absolute top-8 -right-6 bg-[#E8192C] p-6 shadow-2xl transition-all duration-500 delay-400 ${inView ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}>
               <div className="font-['Barlow_Condensed'] font-black text-5xl text-white leading-none">8+</div>
               <div className="font-['DM_Sans'] text-xs text-white/80 uppercase tracking-wider mt-1">Năm<br/>Kinh Nghiệm</div>
-            </motion.div>
+            </div>
 
-            {/* Side accent */}
             <div className="absolute -left-3 top-12 bottom-12 w-px bg-gradient-to-b from-transparent via-[#E8192C] to-transparent" />
-          </motion.div>
+          </div>
 
           {/* Right – Text */}
-          <motion.div
-            initial={{ opacity: 0, x: 60 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
+          <div className={`transition-all duration-700 delay-200 ${inView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
             <div className="inline-flex items-center gap-2 border border-[#E8192C]/40 px-4 py-1.5 mb-6">
               <span className="font-['DM_Sans'] text-xs font-medium uppercase tracking-[0.2em] text-[#E8192C]">
                 Về CLB GYM Mạnh Cường
@@ -102,28 +74,24 @@ export default function About() {
 
             <div className="grid sm:grid-cols-2 gap-3 mb-10">
               {features.map((feature, i) => (
-                <motion.div
+                <div
                   key={feature}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={inView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ delay: 0.4 + i * 0.08 }}
-                  className="flex items-center gap-3"
+                  className={`flex items-center gap-3 transition-all duration-500 ${inView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'}`}
+                  style={{ transitionDelay: `${300 + i * 60}ms` }}
                 >
                   <CheckCircle size={16} className="text-[#E8192C] shrink-0" />
                   <span className="font-['DM_Sans'] text-sm text-white/70">{feature}</span>
-                </motion.div>
+                </div>
               ))}
             </div>
 
-            <motion.button
-              whileHover={{ scale: 1.04, x: 4 }}
-              whileTap={{ scale: 0.97 }}
+            <button
               onClick={() => document.querySelector('#classes')?.scrollIntoView({ behavior: 'smooth' })}
-              className="bg-transparent border border-[#E8192C] text-[#E8192C] hover:bg-[#E8192C] hover:text-white font-['Barlow_Condensed'] font-bold text-lg uppercase tracking-widest px-10 py-3 transition-all duration-300"
+              className="bg-transparent border border-[#E8192C] text-[#E8192C] hover:bg-[#E8192C] hover:text-white font-['Barlow_Condensed'] font-bold text-lg uppercase tracking-widest px-10 py-3 transition-all duration-300 active:scale-95"
             >
               Khám Phá Lớp Học
-            </motion.button>
-          </motion.div>
+            </button>
+          </div>
         </div>
       </div>
     </section>
