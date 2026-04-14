@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run:*)",
+      "Bash(node:*)",
+      "Bash(curl -s http://localhost:3001)",
+      "Bash(python3 -c \"import sys,json; d=sys.stdin.read\\(\\); print\\('OK' if 'IronYoga' in d or '__next' in d else 'ERROR'\\); print\\(d[:300] if 'err' in d.lower\\(\\) else 'Page loaded fine'\\)\")",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(vercel:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}

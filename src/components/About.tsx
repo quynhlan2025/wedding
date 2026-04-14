@@ -1,0 +1,131 @@
+'use client';
+
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { CheckCircle } from 'lucide-react';
+import Image from 'next/image';
+
+const features = [
+  'Thiết bị hiện đại nhập khẩu từ châu Âu',
+  'Huấn luyện viên được chứng nhận quốc tế',
+  'Chương trình tập cá nhân hóa 100%',
+  'Dinh dưỡng & phục hồi chuyên nghiệp',
+  'Cộng đồng tích cực, hỗ trợ lẫn nhau',
+  'Mở cửa 24/7 – tập lúc nào cũng được',
+];
+
+export default function About() {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-100px' });
+
+  return (
+    <section id="about" ref={ref} className="relative py-32 overflow-hidden">
+      <div className="absolute left-0 top-0 w-1/2 h-full bg-[#060e1c]/60" />
+      <div className="absolute right-0 bottom-0 w-[400px] h-[400px] rounded-full bg-[#E8192C]/5 blur-[120px]" />
+
+      <div className="relative max-w-7xl mx-auto px-6">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          {/* Left – Image */}
+          <motion.div
+            initial={{ opacity: 0, x: -60 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8 }}
+            className="relative"
+          >
+            {/* Main image */}
+            <div className="relative aspect-[4/5] overflow-hidden border border-white/8">
+              <Image
+                src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=900&q=80&auto=format&fit=crop"
+                alt="Gym interior"
+                fill
+                className="object-cover object-center"
+                unoptimized
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#04080f]/60 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#E8192C]" />
+            </div>
+
+            {/* Small inset image */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="absolute -bottom-8 right-0 w-2/5 aspect-square border-4 border-[#04080f] overflow-hidden shadow-2xl"
+            >
+              <Image
+                src="https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=400&q=80&auto=format&fit=crop"
+                alt="Yoga session"
+                fill
+                className="object-cover object-center"
+                unoptimized
+              />
+              <div className="absolute inset-0 bg-[#E8192C]/10" />
+            </motion.div>
+
+            {/* Floating badge */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={inView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="absolute top-8 -right-6 bg-[#E8192C] p-6 shadow-2xl"
+            >
+              <div className="font-['Barlow_Condensed'] font-black text-5xl text-white leading-none">8+</div>
+              <div className="font-['DM_Sans'] text-xs text-white/80 uppercase tracking-wider mt-1">Năm<br/>Kinh Nghiệm</div>
+            </motion.div>
+
+            {/* Side accent */}
+            <div className="absolute -left-3 top-12 bottom-12 w-px bg-gradient-to-b from-transparent via-[#E8192C] to-transparent" />
+          </motion.div>
+
+          {/* Right – Text */}
+          <motion.div
+            initial={{ opacity: 0, x: 60 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <div className="inline-flex items-center gap-2 border border-[#E8192C]/40 px-4 py-1.5 mb-6">
+              <span className="font-['DM_Sans'] text-xs font-medium uppercase tracking-[0.2em] text-[#E8192C]">
+                Về CLB GYM Mạnh Cường
+              </span>
+            </div>
+
+            <h2 className="font-['Barlow_Condensed'] font-black text-[clamp(3rem,7vw,6rem)] uppercase leading-[0.9] text-white mb-6">
+              Nơi Giới Hạn<br/>
+              <span className="text-[#E8192C]">Bị Phá Vỡ</span>
+            </h2>
+
+            <p className="font-['DM_Sans'] text-white/60 text-lg leading-relaxed mb-8">
+              CLB GYM Mạnh Cường không chỉ là phòng gym — đây là nơi bạn khám phá phiên bản tốt nhất của chính mình.
+              Với đội ngũ HLV tận tâm và thiết bị hiện đại, chúng tôi cam kết đồng hành cùng bạn trên từng bước
+              của hành trình rèn luyện sức khoẻ.
+            </p>
+
+            <div className="grid sm:grid-cols-2 gap-3 mb-10">
+              {features.map((feature, i) => (
+                <motion.div
+                  key={feature}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={inView ? { opacity: 1, x: 0 } : {}}
+                  transition={{ delay: 0.4 + i * 0.08 }}
+                  className="flex items-center gap-3"
+                >
+                  <CheckCircle size={16} className="text-[#E8192C] shrink-0" />
+                  <span className="font-['DM_Sans'] text-sm text-white/70">{feature}</span>
+                </motion.div>
+              ))}
+            </div>
+
+            <motion.button
+              whileHover={{ scale: 1.04, x: 4 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => document.querySelector('#classes')?.scrollIntoView({ behavior: 'smooth' })}
+              className="bg-transparent border border-[#E8192C] text-[#E8192C] hover:bg-[#E8192C] hover:text-white font-['Barlow_Condensed'] font-bold text-lg uppercase tracking-widest px-10 py-3 transition-all duration-300"
+            >
+              Khám Phá Lớp Học
+            </motion.button>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
