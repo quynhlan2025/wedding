@@ -29,8 +29,8 @@ export default function CustomCursor() {
 
   return (
     <>
-      <div ref={ringRef} className="fixed top-0 left-0 w-10 h-10 rounded-full border border-red-500 pointer-events-none z-[99999]" style={{ willChange: 'transform' }} />
-      <div ref={dotRef} className="fixed top-0 left-0 w-2 h-2 rounded-full bg-red-500 pointer-events-none z-[99999]" style={{ willChange: 'transform' }} />
+      <div ref={ringRef} className="fixed top-0 left-0 w-10 h-10 rounded-full border border-red-500 pointer-events-none z-[99999]" style={{ willChange: 'transform', touchAction: 'none' }} />
+      <div ref={dotRef} className="fixed top-0 left-0 w-2 h-2 rounded-full bg-red-500 pointer-events-none z-[99999]" style={{ willChange: 'transform', touchAction: 'none' }} />
     </>
   );
 }

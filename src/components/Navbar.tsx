@@ -64,8 +64,18 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* Mobile Menu — pure CSS, no Framer Motion */}
-      <div className={`fixed inset-0 z-40 bg-[#04080f]/98 flex flex-col items-center justify-center gap-8 transition-all duration-300 ${mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+      {/* Mobile Menu */}
+      <div
+        className="fixed inset-0 z-40 bg-[#04080f]/98 flex flex-col items-center justify-center gap-8"
+        style={{
+          opacity: mobileOpen ? 1 : 0,
+          pointerEvents: mobileOpen ? 'auto' : 'none',
+          visibility: mobileOpen ? 'visible' : 'hidden',
+          transition: mobileOpen
+            ? 'opacity 0.3s ease, visibility 0s 0s'
+            : 'opacity 0.3s ease, visibility 0s 0.3s',
+        }}
+      >
         {links.map((link, i) => (
           <button key={link.href} onClick={() => scrollTo(link.href)}
             className="font-['Barlow_Condensed'] font-bold text-4xl uppercase tracking-widest text-white active:text-[#E8192C] transition-colors"
