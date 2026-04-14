@@ -1,7 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowRight, Play } from 'lucide-react';
 import Image from 'next/image';
 
@@ -12,42 +11,27 @@ const stats = [
   { value: '8', label: 'Năm Kinh Nghiệm' },
 ];
 
-// Unsplash gym hero images (free, no key needed via direct photo URLs)
-const heroImages = [
-  'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1800&q=80&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=1800&q=80&auto=format&fit=crop',
-];
-
 export default function Hero() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: containerRef, offset: ['start start', 'end start'] });
-  const yBg = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
-  const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
-  const yText = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
-
   const scrollTo = (href: string) => {
     document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    <section ref={containerRef} id="hero" className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Background image with parallax */}
-      <motion.div style={{ y: yBg }} className="absolute inset-0 z-0 scale-110">
+    <section id="hero" className="relative min-h-screen flex items-center overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 z-0">
         <Image
-          src={heroImages[0]}
+          src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1800&q=80&auto=format&fit=crop"
           alt="Gym hero"
           fill
           priority
           className="object-cover object-center"
           unoptimized
         />
-        {/* Dark overlays */}
-        <div className="absolute inset-0 bg-[#04080f]/75" />
+        <div className="absolute inset-0 bg-[#04080f]/80" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#04080f] via-[#04080f]/60 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#04080f] via-transparent to-transparent" />
-        {/* Red glow */}
         <div className="absolute top-1/4 right-1/4 w-[600px] h-[600px] rounded-full bg-[#E8192C]/10 blur-[120px]" />
-        {/* Grid lines */}
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -55,25 +39,17 @@ export default function Hero() {
             backgroundSize: '80px 80px',
           }}
         />
-      </motion.div>
+      </div>
 
-      {/* Large background text */}
+      {/* Large bg text */}
       <div className="absolute right-0 top-1/2 -translate-y-1/2 select-none pointer-events-none overflow-hidden">
-        <motion.span
-          initial={{ opacity: 0, x: 100 }}
-          animate={{ opacity: 0.04, x: 0 }}
-          transition={{ duration: 1.2, delay: 0.5 }}
-          className="font-['Barlow_Condensed'] font-black text-[22vw] uppercase text-white leading-none whitespace-nowrap"
-        >
+        <span className="font-['Barlow_Condensed'] font-black text-[22vw] uppercase text-white/[0.04] leading-none whitespace-nowrap">
           POWER
-        </motion.span>
+        </span>
       </div>
 
       {/* Content */}
-      <motion.div
-        style={{ y: yText, opacity }}
-        className="relative z-10 max-w-7xl mx-auto px-6 pt-24 pb-12 w-full"
-      >
+      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-28 pb-12 w-full">
         <div className="max-w-4xl">
           {/* Badge */}
           <motion.div
@@ -118,27 +94,23 @@ export default function Hero() {
             transition={{ duration: 0.7, delay: 0.6 }}
             className="flex flex-wrap items-center gap-4"
           >
-            <motion.button
-              whileHover={{ scale: 1.05, x: 4 }}
-              whileTap={{ scale: 0.97 }}
+            <button
               onClick={() => scrollTo('#pricing')}
-              className="group flex items-center gap-3 bg-[#E8192C] text-white font-['Barlow_Condensed'] font-bold text-xl uppercase tracking-widest px-10 py-4 transition-all duration-200"
+              className="group flex items-center gap-3 bg-[#E8192C] hover:bg-[#c4152a] text-white font-['Barlow_Condensed'] font-bold text-xl uppercase tracking-widest px-10 py-4 transition-colors duration-200 active:scale-95"
             >
               Đăng Ký Ngay
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-            </motion.button>
+            </button>
 
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.97 }}
+            <button
               onClick={() => scrollTo('#classes')}
-              className="group flex items-center gap-3 border border-white/20 hover:border-white/50 text-white font-['Barlow_Condensed'] font-bold text-xl uppercase tracking-widest px-10 py-4 transition-all duration-200"
+              className="group flex items-center gap-3 border border-white/20 hover:border-white/50 text-white font-['Barlow_Condensed'] font-bold text-xl uppercase tracking-widest px-10 py-4 transition-colors duration-200 active:scale-95"
             >
               <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-[#E8192C] transition-colors">
                 <Play size={12} fill="white" />
               </div>
               Xem Lớp Học
-            </motion.button>
+            </button>
           </motion.div>
         </div>
 
@@ -155,7 +127,7 @@ export default function Hero() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1 + i * 0.1 }}
-              className="bg-[#04080f]/80 backdrop-blur-sm px-8 py-6 group hover:bg-[#060e1c] transition-colors duration-300"
+              className="bg-[#04080f]/80 px-8 py-6 hover:bg-[#060e1c] transition-colors duration-300"
             >
               <div className="font-['Barlow_Condensed'] font-black text-[2.5rem] text-[#E8192C] leading-none">
                 {s.value}
@@ -166,7 +138,7 @@ export default function Hero() {
             </motion.div>
           ))}
         </motion.div>
-      </motion.div>
+      </div>
 
       {/* Scroll indicator */}
       <motion.div
