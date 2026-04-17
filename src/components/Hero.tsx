@@ -1,16 +1,38 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { ArrowRight, Play } from 'lucide-react';
 import Image from 'next/image';
+import { createClient } from '@/lib/supabase/client';
 
-const stats = [
+type Stat = { value: string; label: string };
+
+const DEFAULT_STATS: Stat[] = [
   { value: '2,500+', label: 'Hội Viên' },
   { value: '50+',    label: 'Lớp / Tuần' },
   { value: '15+',    label: 'HLV Chuyên Nghiệp' },
   { value: '8',      label: 'Năm Kinh Nghiệm' },
 ];
 
+const DEFAULT_HERO = {
+  headline: 'Rèn Luyện Thân Thể & Tâm Trí',
+  subtext: 'Phòng gym & yoga đẳng cấp với huấn luyện viên chuyên nghiệp. Biến đổi bản thân, nâng cao sức khỏe và tìm lại sự cân bằng trong cuộc sống.',
+  bg_image_url: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1400&q=75&auto=format&fit=crop',
+};
+
 export default function Hero() {
+  const supabase = createClient();
+  const [hero, setHero] = useState(DEFAULT_HERO);
+  const [stats, setStats] = useState<Stat[]>(DEFAULT_STATS);
+
+  useEffect(() => {
+    supabase.from('hero_content').select('*').eq('id', 1).single()
+      .then(({ data }) => { if (data) setHero(data); });
+
+    supabase.from('stats').select('*').order('sort_order')
+      .then(({ data }) => { if (data && data.length > 0) setStats(data); });
+  }, []);
+
   const scrollTo = (href: string) => {
     document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -19,7 +41,7 @@ export default function Hero() {
     <section id="hero" className="relative min-h-screen flex items-center overflow-hidden">
       <div className="absolute inset-0 z-0">
         <Image
-          src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1400&q=75&auto=format&fit=crop"
+          src={hero.bg_image_url}
           alt="Gym hero" fill priority className="object-cover object-center" sizes="100vw"
         />
         <div className="absolute inset-0 bg-[#04080f]/80" />
@@ -46,7 +68,7 @@ export default function Hero() {
           </h1>
 
           <p className="anim-up anim-d4 font-['DM_Sans'] text-white/60 text-lg max-w-xl mb-10 leading-relaxed">
-            Phòng gym & yoga đẳng cấp với huấn luyện viên chuyên nghiệp. Biến đổi bản thân, nâng cao sức khỏe và tìm lại sự cân bằng trong cuộc sống.
+            {hero.subtext}
           </p>
 
           <div className="anim-up anim-d5 flex flex-wrap items-center gap-4">
@@ -74,7 +96,6 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Scroll indicator — pure CSS */}
       <div className="anim-fade anim-d9 absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
         <span className="font-['DM_Sans'] text-xs text-white/30 uppercase tracking-[0.3em]">Cuộn</span>
         <div className="w-px h-12 bg-gradient-to-b from-[#E8192C] to-transparent animate-bounce" />

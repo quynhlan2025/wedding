@@ -1,30 +1,38 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Clock, Users, Flame, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
+import { createClient } from '@/lib/supabase/client';
 
-const categories = ['Tất Cả', 'Gym', 'Yoga', 'Cardio', 'Đặc Biệt'];
+type Class = {
+  id: string; category: string; name: string; description: string;
+  duration: string; level: string; calories: string; icon: string; image_url: string;
+};
 
-const classes = [
-  { category: 'Gym', name: 'Power Lifting', desc: 'Tăng cơ bắp và sức mạnh tổng thể với phương pháp tập luyện chuyên nghiệp.', duration: '60 phút', level: 'Nâng cao', calories: '400-600', icon: '🏋️', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=70&auto=format&fit=crop' },
-  { category: 'Yoga', name: 'Hatha Yoga', desc: 'Cân bằng cơ thể và tâm trí qua các tư thế yoga cổ điển và hơi thở sâu.', duration: '75 phút', level: 'Cơ bản', calories: '150-250', icon: '🧘', img: 'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=70&auto=format&fit=crop' },
-  { category: 'Cardio', name: 'HIIT Cardio', desc: 'Đốt cháy mỡ thừa cực hiệu quả với bài tập cường độ cao xen kẽ nghỉ ngắn.', duration: '45 phút', level: 'Trung bình', calories: '500-700', icon: '🔥', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=70&auto=format&fit=crop' },
-  { category: 'Yoga', name: 'Vinyasa Flow', desc: 'Kết hợp động tác linh hoạt và hơi thở tạo nên dòng chảy thiền định.', duration: '60 phút', level: 'Trung bình', calories: '200-350', icon: '🌊', img: 'https://images.unsplash.com/photo-1588286840104-8957b019727f?w=600&q=70&auto=format&fit=crop' },
-  { category: 'Đặc Biệt', name: 'Boxing Fitness', desc: 'Phối hợp kỹ năng boxing với cardio để tăng sức mạnh và phản xạ.', duration: '60 phút', level: 'Trung bình', calories: '600-800', icon: '🥊', img: 'https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=600&q=70&auto=format&fit=crop' },
-  { category: 'Gym', name: 'Body Sculpt', desc: 'Tạo hình vóc dáng lý tưởng với bài tập kết hợp tạ và tự trọng lượng.', duration: '50 phút', level: 'Cơ bản', calories: '300-450', icon: '💪', img: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600&q=70&auto=format&fit=crop' },
-];
+const CATEGORIES = ['Tất Cả', 'Gym', 'Yoga', 'Cardio', 'Đặc Biệt'];
 
 export default function Classes() {
+  const supabase = createClient();
+  const [classes, setClasses] = useState<Class[]>([]);
   const [active, setActive] = useState('Tất Cả');
+
+  useEffect(() => {
+    supabase.from('classes').select('*').order('sort_order')
+      .then(({ data }) => { if (data) setClasses(data); });
+  }, []);
+
   const filtered = active === 'Tất Cả' ? classes : classes.filter(c => c.category === active);
+
+  // Build category list from available data + default
+  const availableCategories = ['Tất Cả', ...Array.from(new Set(classes.map(c => c.category)))];
+  const cats = availableCategories.length > 1 ? availableCategories : CATEGORIES;
 
   return (
     <section id="classes" className="relative py-32 bg-[#060e1c]/50 overflow-hidden">
       <div className="absolute right-0 top-0 w-[500px] h-[500px] rounded-full bg-[#E8192C]/5 blur-[150px] pointer-events-none" />
       <div className="max-w-7xl mx-auto px-6">
 
-        {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
           <div className="anim-up">
             <div className="inline-flex items-center gap-2 border border-[#E8192C]/40 px-4 py-1.5 mb-6">
@@ -35,7 +43,7 @@ export default function Classes() {
             </h2>
           </div>
           <div className="flex flex-wrap gap-2">
-            {categories.map(cat => (
+            {cats.map(cat => (
               <button key={cat} onClick={() => setActive(cat)}
                 className={`font-['Barlow_Condensed'] font-bold text-sm uppercase tracking-widest px-5 py-2 border transition-all duration-200 ${active === cat ? 'bg-[#E8192C] border-[#E8192C] text-white' : 'border-white/20 text-white/60 hover:border-white/50 hover:text-white'}`}>
                 {cat}
@@ -44,14 +52,19 @@ export default function Classes() {
           </div>
         </div>
 
-        {/* Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filtered.length === 0 && (
+            <p className="col-span-3 text-center font-['DM_Sans'] text-white/30 py-12">Chưa có lớp học nào.</p>
+          )}
           {filtered.map((cls, i) => (
-            <div key={cls.name}
+            <div key={cls.id}
               className="card-hover group relative bg-[#0f1e35] border border-white/8 overflow-hidden anim-up"
               style={{ animationDelay: `${i * 80}ms` }}>
               <div className="relative h-44 overflow-hidden">
-                <Image src={cls.img} alt={cls.name} fill className="object-cover object-center group-hover:scale-110 transition-transform duration-700" />
+                {cls.image_url
+                  ? <Image src={cls.image_url} alt={cls.name} fill className="object-cover object-center group-hover:scale-110 transition-transform duration-700" />
+                  : <div className="w-full h-full bg-[#060e1c] flex items-center justify-center text-5xl">{cls.icon}</div>
+                }
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0f1e35] via-[#0f1e35]/40 to-transparent" />
                 <span className="absolute bottom-4 left-4 text-3xl">{cls.icon}</span>
               </div>
@@ -60,7 +73,7 @@ export default function Classes() {
                   <span className="font-['DM_Sans'] text-xs text-[#E8192C] uppercase tracking-widest border border-[#E8192C]/30 px-3 py-1">{cls.category}</span>
                 </div>
                 <h3 className="font-['Barlow_Condensed'] font-bold text-3xl uppercase text-white mb-3 group-hover:text-[#E8192C] transition-colors duration-300">{cls.name}</h3>
-                <p className="font-['DM_Sans'] text-sm text-white/50 leading-relaxed mb-6">{cls.desc}</p>
+                <p className="font-['DM_Sans'] text-sm text-white/50 leading-relaxed mb-6">{cls.description}</p>
                 <div className="w-12 h-px bg-[#E8192C] mb-6 group-hover:w-full transition-all duration-500" />
                 <div className="flex items-center gap-4 text-white/40 text-xs font-['DM_Sans']">
                   <span className="flex items-center gap-1.5"><Clock size={12}/>{cls.duration}</span>
