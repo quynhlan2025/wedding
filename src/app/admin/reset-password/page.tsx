@@ -9,7 +9,6 @@ import { createClient } from '@/lib/supabase/client';
 
 export default function ResetPasswordPage() {
   const router = useRouter();
-  const supabase = createClient();
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [showPwd, setShowPwd] = useState(false);
@@ -20,6 +19,7 @@ export default function ResetPasswordPage() {
 
   // Supabase puts the token in the URL hash — wait for session to be set
   useEffect(() => {
+    const supabase = createClient();
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'PASSWORD_RECOVERY') setReady(true);
     });
@@ -33,6 +33,7 @@ export default function ResetPasswordPage() {
     if (password.length < 6) { setError('Mật khẩu tối thiểu 6 ký tự.'); return; }
 
     setLoading(true);
+    const supabase = createClient();
     const { error: err } = await supabase.auth.updateUser({ password });
     if (err) {
       setError(err.message);

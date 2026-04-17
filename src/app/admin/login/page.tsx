@@ -11,7 +11,6 @@ type Mode = 'login' | 'forgot' | 'forgot-sent';
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const supabase = createClient();
   const [mode, setMode] = useState<Mode>('login');
 
   // Login state
@@ -28,6 +27,7 @@ export default function AdminLoginPage() {
     e.preventDefault();
     setError('');
     setLoading(true);
+    const supabase = createClient();
     const { error: err } = await supabase.auth.signInWithPassword({ email, password });
     if (err) {
       setError(err.message);
@@ -42,6 +42,7 @@ export default function AdminLoginPage() {
     e.preventDefault();
     setError('');
     setLoading(true);
+    const supabase = createClient();
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin;
     const { error: err } = await supabase.auth.resetPasswordForEmail(forgotEmail, {
       redirectTo: `${siteUrl}/admin/reset-password`,
