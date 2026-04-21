@@ -357,9 +357,13 @@ app.use((err, _req, res, _next) => {
 // Start
 // ─────────────────────────────────────────────
 if (IS_VERCEL) {
-  // Serverless: bootstrap once per cold start, export app
-  bootstrap().catch(console.error);
-  module.exports = app;
+  // Serverless: wrap app to await bootstrap before handling any request
+  const bootstrapPromise = bootstrap().catch(console.error);
+  const handler = async (req, res) => {
+    await bootstrapPromise;
+    app(req, res);
+  };
+  module.exports = handler;
 } else {
   bootstrap().then(() => {
     app.listen(PORT, () => {
