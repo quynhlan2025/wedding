@@ -53,7 +53,7 @@ async function bootstrap() {
 
   // Create users.json from DEFAULT_ADMIN_PASSWORD if missing
   if (!fs.existsSync(USERS_PATH)) {
-    const defaultPass = process.env.DEFAULT_ADMIN_PASSWORD;
+    const defaultPass = (process.env.DEFAULT_ADMIN_PASSWORD || '').trim();
     if (!defaultPass) {
       console.error('ERROR: Set DEFAULT_ADMIN_PASSWORD in env before first run');
       if (!IS_VERCEL) process.exit(1);
