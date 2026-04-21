@@ -69,11 +69,11 @@ function render() {
   renderHero();
   renderStory();
   renderCouple();
-  renderEvents();
   renderSchedule();
   renderGallery();
   renderDetails();
   renderSaigonGuide();
+  renderLocation();
 }
 
 // Hero
@@ -168,57 +168,46 @@ function renderCouple() {
   applyLang();
 }
 
-// Events
-function renderEvents() {
-  const events = CONTENT.events;
-  if (!events || !events.length) return;
+// Location
+function renderLocation() {
+  const loc = CONTENT.location;
+  if (!loc) return;
 
-  const grid = document.getElementById('eventsGrid');
-  if (!grid) return;
+  const venuesEl = document.getElementById('locationVenues');
+  const noteEl   = document.getElementById('locationNote');
+  if (!venuesEl || !noteEl) return;
 
-  const icons = {
-    heart:  '💍',
-    home:   '🏡',
-    ring:   '💍',
-    glass:  '🥂',
-    flower: '🌸',
-  };
-
-  grid.innerHTML = events.map(ev => {
-    const d = new Date(ev.date + 'T' + (ev.time || '00:00'));
-    const dateStr = isNaN(d) ? ev.date : (LANG === 'en'
-      ? `${d.getDate()} ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]} ${d.getFullYear()}`
-      : `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`);
-
-    const timeStr = ev.time ? ev.time.substring(0,5) : '';
-
+  const venues = loc.venues || [];
+  venuesEl.innerHTML = venues.map(v => {
+    const imgHtml = v.image
+      ? `<div class="loc-img-wrap"><img src="${escHtml(v.image)}" alt="${escHtml(v.name)}" loading="lazy" /></div>`
+      : `<div class="loc-img-wrap loc-img-placeholder"></div>`;
+    const mapLink = v.mapUrl
+      ? `<a class="loc-map-link" href="${escHtml(v.mapUrl)}" target="_blank" rel="noopener">
+           <span data-vi>Xem bản đồ</span><span data-en class="hidden">View on map</span>
+         </a>`
+      : '';
     return `
-      <div class="event-card">
-        <div class="corner-br" aria-hidden="true"></div>
-        <div class="corner-bl" aria-hidden="true"></div>
-        <div class="event-icon" aria-hidden="true">${icons[ev.icon] || '✨'}</div>
-        <p class="event-label">
-          <span data-vi>${escHtml(ev.label?.vi || '')}</span>
-          <span data-en class="hidden">${escHtml(ev.label?.en || '')}</span>
+      <div class="loc-venue">
+        ${imgHtml}
+        <h3 class="loc-name">${escHtml(v.name)}</h3>
+        <p class="loc-address">
+          <span data-vi>${escHtml(v.address?.vi || '')}</span>
+          <span data-en class="hidden">${escHtml(v.address?.en || '')}</span>
         </p>
-        <h3 class="event-title">
-          <span data-vi>${escHtml(ev.title?.vi || '')}</span>
-          <span data-en class="hidden">${escHtml(ev.title?.en || '')}</span>
-        </h3>
-        <div class="event-detail">
-          <p><strong>${ev.date}</strong> &nbsp;•&nbsp; ${timeStr}</p>
-          <p>
-            <span data-vi>${escHtml(ev.venue?.vi || '')}</span>
-            <span data-en class="hidden">${escHtml(ev.venue?.en || '')}</span>
-          </p>
-          <p>
-            <span data-vi>${escHtml(ev.address?.vi || '')}</span>
-            <span data-en class="hidden">${escHtml(ev.address?.en || '')}</span>
-          </p>
-        </div>
+        ${mapLink}
       </div>
     `;
   }).join('');
+
+  if (loc.note) {
+    noteEl.innerHTML = `
+      <p class="loc-note-text">
+        <span data-vi>${escHtml(loc.note.vi || '')}</span>
+        <span data-en class="hidden">${escHtml(loc.note.en || '')}</span>
+      </p>
+    `;
+  }
 
   applyLang();
 }

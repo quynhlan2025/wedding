@@ -187,7 +187,7 @@ app.put('/api/content/:section', requireAuth, (req, res) => {
   try {
     const content = readJSON(CONTENT_PATH);
     const { section } = req.params;
-    const allowed = ['general','hero','story','couple','events','schedule','gallery','details','saigonGuide'];
+    const allowed = ['general','hero','story','couple','location','schedule','gallery','details','saigonGuide'];
     if (!allowed.includes(section)) return res.status(400).json({ error: 'Unknown section' });
 
     content[section] = req.body;
@@ -420,28 +420,28 @@ function defaultContent() {
         portrait: '',
       },
     },
-    events: [
-      {
-        id: '1',
-        label:   { vi: 'Lễ gia tiên', en: 'The Ceremony' },
-        title:   { vi: 'Lễ Vu Quy', en: 'Traditional Ceremony' },
-        date:    '2026-11-14',
-        time:    '09:00',
-        venue:   { vi: 'Tư gia nhà gái', en: "Bride's Family Home" },
-        address: { vi: 'Quận 3, Thành phố Hồ Chí Minh', en: 'District 3, Ho Chi Minh City' },
-        icon:    'heart',
+    location: {
+      note: {
+        vi: 'Chúng mình khuyến khích bạn thêm 30 phút so với thời gian Google Maps hiển thị để tránh kẹt xe.\n\nAn Lam Saigon River có dịch vụ đưa đón bằng thuyền miễn phí từ Quận 1 và Quận 2 đến địa điểm tiệc theo khung giờ cố định.',
+        en: 'We recommend allowing an extra 30 minutes on top of the travel time shown on Google Maps to account for traffic.\n\nAn Lam Saigon River offers complimentary boat transfers from District 1 and District 2 to the reception venue at scheduled times.',
       },
-      {
-        id: '2',
-        label:   { vi: 'Tiệc cưới', en: 'Reception' },
-        title:   { vi: 'Tiệc Cưới', en: 'Wedding Reception' },
-        date:    '2026-11-15',
-        time:    '18:00',
-        venue:   { vi: 'An Lam Retreats Saigon', en: 'An Lam Retreats Saigon' },
-        address: { vi: '172 Bến Vân Đồn, Quận 4, Thành phố Hồ Chí Minh', en: '172 Ben Van Don, District 4, Ho Chi Minh City' },
-        icon:    'glass',
-      },
-    ],
+      venues: [
+        {
+          id: '1',
+          name:    'Nhà thờ Chợ Quán',
+          address: { vi: '120 Trần Bình Trọng, Phường 2, Chợ Quán, Hồ Chí Minh', en: '120 Tran Binh Trong, Ward 2, Cho Quan, Ho Chi Minh' },
+          image:   '',
+          mapUrl:  '',
+        },
+        {
+          id: '2',
+          name:    'Saigon River House, An Lam Retreats',
+          address: { vi: '785 Trung Lương, Vĩnh Phú, Biên Hoà, Hồ Chí Minh', en: '785 Trung Luong, Vinh Phu, Bien Hoa, Ho Chi Minh' },
+          image:   '',
+          mapUrl:  '',
+        },
+      ],
+    },
     schedule: {
       dateHeading: { vi: 'Chủ Nhật, 15 tháng 11 năm 2026', en: 'Sunday, 15th November 2026' },
       image: '',

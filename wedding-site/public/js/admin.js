@@ -294,7 +294,7 @@ function renderSection(section) {
     hero:       renderHero,
     story:      renderStory,
     couple:     renderCouple,
-    events:     renderEvents,
+    location:   renderLocation,
     schedule:   renderSchedule,
     gallery:    renderGallery,
     details:    renderDetails,
@@ -315,7 +315,7 @@ function collectSection(section) {
     hero:        collectHero,
     story:       collectStory,
     couple:      collectCouple,
-    events:      collectEvents,
+    location:    collectLocation,
     schedule:    collectSchedule,
     gallery:     collectGallery,
     details:     collectDetails,
@@ -586,90 +586,87 @@ function collectCouple() {
 }
 
 // ─────────────────────────────────────────────
-// Section: Events
+// Section: Location
 // ─────────────────────────────────────────────
-function renderEvents(wrap) {
-  const events = CONTENT.events || [];
-  wrap.innerHTML = `<h1 class="panel-title">Events</h1><p class="panel-desc">Các sự kiện trong ngày cưới</p>`;
+function renderLocation(wrap) {
+  const loc = CONTENT.location || {};
+  const venues = loc.venues || [];
 
+  wrap.innerHTML = `<h1 class="panel-title">Location</h1><p class="panel-desc">Địa điểm tổ chức và ghi chú di chuyển</p>`;
+
+  // Note card
+  const noteCard = document.createElement('div');
+  noteCard.className = 'admin-card';
+  noteCard.innerHTML = `
+    <p class="admin-card-title">Ghi chú di chuyển</p>
+    <div class="form-row">
+      <div class="form-group"><label>Ghi chú (VI)</label><textarea id="loc-note-vi" rows="4">${esc(loc.note?.vi||'')}</textarea></div>
+      <div class="form-group"><label>Note (EN)</label><textarea id="loc-note-en" rows="4">${esc(loc.note?.en||'')}</textarea></div>
+    </div>
+  `;
+  wrap.appendChild(noteCard);
+
+  // Venues list
   const listWrap = document.createElement('div');
-  listWrap.id = 'events-list';
+  listWrap.id = 'loc-list';
   wrap.appendChild(listWrap);
-
-  events.forEach(ev => listWrap.appendChild(makeEventCard(ev)));
+  venues.forEach(v => listWrap.appendChild(makeVenueCard(v)));
 
   const addBtn = document.createElement('button');
   addBtn.className = 'btn-add';
-  addBtn.textContent = '+ Thêm sự kiện';
+  addBtn.textContent = '+ Thêm địa điểm';
   addBtn.addEventListener('click', () => {
-    const newEv = { id: Date.now().toString(), label:{vi:'',en:''}, title:{vi:'',en:''}, date:'', time:'', venue:{vi:'',en:''}, address:{vi:'',en:''}, icon:'heart' };
-    listWrap.appendChild(makeEventCard(newEv));
+    const newV = { id: Date.now().toString(), name: '', address: { vi:'', en:'' }, image: '', mapUrl: '' };
+    listWrap.appendChild(makeVenueCard(newV));
   });
   wrap.appendChild(addBtn);
 }
 
-function makeEventCard(ev) {
+function makeVenueCard(v) {
   const card = document.createElement('div');
   card.className = 'admin-card';
-  card.dataset.evId = ev.id;
-  const icons = ['heart','home','ring','glass','flower','star'];
+  card.dataset.venueId = v.id;
   card.innerHTML = `
-    <p class="admin-card-title">Sự kiện ID: ${esc(ev.id)}</p>
+    <p class="admin-card-title">Địa điểm</p>
+    <div class="form-group"><label>Tên địa điểm</label><input type="text" class="v-name" value="${esc(v.name||'')}" /></div>
     <div class="form-row">
-      <div class="form-group"><label>Label (VI)</label><input type="text" class="ev-label-vi" value="${esc(ev.label?.vi||'')}" /></div>
-      <div class="form-group"><label>Label (EN)</label><input type="text" class="ev-label-en" value="${esc(ev.label?.en||'')}" /></div>
+      <div class="form-group"><label>Địa chỉ (VI)</label><input type="text" class="v-addr-vi" value="${esc(v.address?.vi||'')}" /></div>
+      <div class="form-group"><label>Address (EN)</label><input type="text" class="v-addr-en" value="${esc(v.address?.en||'')}" /></div>
     </div>
-    <div class="form-row">
-      <div class="form-group"><label>Title (VI)</label><input type="text" class="ev-title-vi" value="${esc(ev.title?.vi||'')}" /></div>
-      <div class="form-group"><label>Title (EN)</label><input type="text" class="ev-title-en" value="${esc(ev.title?.en||'')}" /></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Ngày</label><input type="date" class="ev-date" value="${esc(ev.date||'')}" /></div>
-      <div class="form-group"><label>Giờ</label><input type="time" class="ev-time" value="${esc(ev.time||'')}" /></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Venue (VI)</label><input type="text" class="ev-venue-vi" value="${esc(ev.venue?.vi||'')}" /></div>
-      <div class="form-group"><label>Venue (EN)</label><input type="text" class="ev-venue-en" value="${esc(ev.venue?.en||'')}" /></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Address (VI)</label><input type="text" class="ev-addr-vi" value="${esc(ev.address?.vi||'')}" /></div>
-      <div class="form-group"><label>Address (EN)</label><input type="text" class="ev-addr-en" value="${esc(ev.address?.en||'')}" /></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Icon</label>
-        <select class="ev-icon">
-          ${icons.map(i => `<option value="${i}" ${ev.icon===i?'selected':''}>${i}</option>`).join('')}
-        </select>
-      </div>
-      <div class="form-group" style="display:flex;align-items:flex-end;">
-        <button class="btn-danger ev-delete" style="margin-bottom:0">Xóa sự kiện</button>
-      </div>
+    <div class="form-group"><label>Link Google Maps</label><input type="url" class="v-mapurl" value="${esc(v.mapUrl||'')}" placeholder="https://maps.google.com/..." /></div>
+    <div class="form-group"><label>Ảnh địa điểm</label><div class="v-upload-zone"></div><input type="hidden" class="v-image" value="${esc(v.image||'')}" /></div>
+    <div style="display:flex;justify-content:flex-end;margin-top:8px">
+      <button class="btn-danger v-delete">Xóa địa điểm</button>
     </div>
   `;
 
-  card.querySelector('.ev-delete').addEventListener('click', async () => {
-    const ok = await confirm('Xóa sự kiện này?');
+  const zone = makeUploadZone('hero', v.image, url => {
+    card.querySelector('.v-image').value = url;
+  });
+  card.querySelector('.v-upload-zone').appendChild(zone);
+
+  card.querySelector('.v-delete').addEventListener('click', async () => {
+    const ok = await confirm('Xóa địa điểm này?');
     if (ok) card.remove();
   });
   return card;
 }
 
-function collectEvents() {
-  const list = [];
-  document.querySelectorAll('#events-list .admin-card').forEach(card => {
-    list.push({
-      id:      card.dataset.evId || Date.now().toString(),
-      label:   { vi: card.querySelector('.ev-label-vi').value, en: card.querySelector('.ev-label-en').value },
-      title:   { vi: card.querySelector('.ev-title-vi').value, en: card.querySelector('.ev-title-en').value },
-      date:    card.querySelector('.ev-date').value,
-      time:    card.querySelector('.ev-time').value,
-      venue:   { vi: card.querySelector('.ev-venue-vi').value, en: card.querySelector('.ev-venue-en').value },
-      address: { vi: card.querySelector('.ev-addr-vi').value, en: card.querySelector('.ev-addr-en').value },
-      icon:    card.querySelector('.ev-icon').value,
+function collectLocation() {
+  const venues = [];
+  document.querySelectorAll('#loc-list .admin-card').forEach(card => {
+    venues.push({
+      id:      card.dataset.venueId || Date.now().toString(),
+      name:    card.querySelector('.v-name').value,
+      address: { vi: card.querySelector('.v-addr-vi').value, en: card.querySelector('.v-addr-en').value },
+      mapUrl:  card.querySelector('.v-mapurl').value,
+      image:   card.querySelector('.v-image').value,
     });
   });
-  return list;
+  return {
+    note:   { vi: val('loc-note-vi'), en: val('loc-note-en') },
+    venues,
+  };
 }
 
 // ─────────────────────────────────────────────
